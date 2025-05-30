@@ -17,18 +17,18 @@ agario_clone/
 ├── requirements.txt     # Lista zależności (websockets, pygame)
 ├── config.py            # Konfiguracja gry (port, rozmiar okna, FPS)
 ├── common/              # Wspólne moduły klient–serwer
-│   ├── messages.py      # Format i typy komunikatów JSON
-│   └── utils.py         # Funkcje pomocnicze (kolizje, konwersje współrzędnych)
+│   ├── messages.py      # Format i typy komunikatów JSON (JOIN, MOVE, UPDATE)
+│   └── utils.py         # Funkcje pomocnicze (np. kolizje, konwersje współrzędnych)
 │
 ├── server/              # Kod serwera WebSocket
-│   ├── server.py        # Punkt wejścia serwera
-│   ├── game_state.py    # Logika gry i stan świata
-│   └── handlers.py      # Handlery websocket (connect, message)
+│   ├── server.py        # Uruchomienie serwera i obsługa połączeń
+│   ├── game_state.py    # Klasa GameState: zarządza stanem gry (pozycje, kolizje)
+│   └── handlers.py      # Handlery websocket (JOIN, MOVE, broadcast UPDATE)
 │
-├── client/              # Kod klienta Pygame
-│   ├── client.py        # Punkt wejścia klienta i główna pętla
-│   ├── network.py       # Komunikacja z serwerem przez WebSocket
-│   └── renderer.py      # Renderowanie stanu gry w Pygame
+├── client/              # Kod klienta Pygame — separacja logiki
+│   ├── client.py        # Punkt wejścia: pętla Pygame i obsługa inputu
+│   ├── network.py       # Moduł network: wsparcie WebSocket (JOIN, MOVE, UPDATE)
+│   └── renderer.py      # Moduł renderer: funkcja rysująca stan gry w Pygame
 │
 └── assets/              # Zasoby (czcionki, obrazy)
     ├── fonts/
@@ -37,7 +37,18 @@ agario_clone/
         └── logo.png
 ```
 
-_(Poniższe sekcje opisują dalsze kroki instalacji, uruchomienia i rozbudowy projektu.)_
+### Podział modułów klienta
+
+- **client.py**: uruchamia wątek sieciowy (`network.start_network_thread()`), obsługuje pętlę Pygame, przetwarza input (WSAD) i aktualizuje `local_pos`.
+- **network.py**: odpowiada za komunikację z serwerem:
+
+  1. Łączy się przez WebSocket (`JOIN`).
+  2. Wysyła cyklicznie (`1/FPS`) aktualną pozycję (`MOVE`).
+  3. Odbiera stany gry (`UPDATE`) i zapisuje je w `shared_state`.
+
+- **renderer.py**: funkcja `render(screen, shared_state)`, która rysuje wszystkie kulki na podstawie danych z `shared_state`.
+
+_(Dzięki takiej architekturze łatwo testować i rozbudowywać każdy element niezależnie.)_
 
 ---
 
@@ -60,15 +71,7 @@ _(Poniższe sekcje opisują dalsze kroki instalacji, uruchomienia i rozbudowy pr
    cd agario_clone
    ```
 
-2. Utwórz i aktywuj wirtualne środowisko:
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # Linux/macOS
-   venv\Scripts\activate     # Windows
-   ```
-
-3. Zainstaluj zależności:
+2. Zainstaluj zależności:
 
    ```bash
    pip install -r requirements.txt
@@ -90,13 +93,13 @@ FPS = 60           # Klient FPS
 ### Serwer
 
 ```bash
-python server/server.py
+python -m server.server
 ```
 
 ### Klient
 
 ```bash
-python client/client.py
+python -m client.client
 ```
 
 ## Protokół wiadomości
@@ -112,11 +115,9 @@ Komunikaty JSON definiowane w `common/messages.py`:
 1. Uruchom serwer.
 2. Otwórz jeden lub więcej klientów.
 3. Poruszaj się klawiszami **W**, **S**, **A**, **D**.
-4. Jedz mniejsze kulki, unikaj większych!
+4. Zobacz, jak Twoja kulka jest kontrolowana przez serwer.
 
 ## Rozszerzenia
 
-- Autoryzacja i nazwy graczy
-- Power-upy (przyspieszenie, niewidzialność)
-- Różne mapy i tryby gry
-- Ranking high-score na serwerze
+- Automatyczna logika zjadania (kolizje) w `GameState`.
+- Power-upy, ranking i dodatkowe tryby gry.
