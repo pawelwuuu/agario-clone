@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+Home – AgarClone
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero__inner">
+    <h1 class="hero__title">Welcome to AgarClone</h1>
+    <p class="hero__tagline">
+      An exciting real-time multiplayer game built with Python.
+    </p>
+    <a href="{% url 'download' %}" class="btn btn--primary hero__cta">
+      Download Now
+    </a>
+  </div>
+</section>
+
+<section class="about">
+  <div class="container about__inner">
+    <h2 class="section-title">About the Game</h2>
+    <p class="about__text">
+      AgarClone is a fast-paced, realtime multiplayer game where you control a
+      cell, eat smaller cells to grow, and avoid being eaten by larger ones.
+      Written entirely in Python using <strong>asyncio</strong>,
+      <strong>websockets</strong> and <strong>Pygame</strong>.
+    </p>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container features__inner">
+    <h2 class="section-title">Key Features</h2>
+    <ul class="features__list">
+      <li class="features__item">Real-time multiplayer arena</li>
+      <li class="features__item">Smooth graphics with Pygame</li>
+      <li class="features__item">Easy to extend and customize</li>
+      <li class="features__item">Open-source MIT-licensed</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

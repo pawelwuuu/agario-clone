@@ -1,0 +1,284 @@
+/* main/static/main/style.css */
+
+/*–––––––––––––––––––––––––––––––––––––
+  Variables & Base
+–––––––––––––––––––––––––––––––––––––*/
+:root {
+  --primary-color: #ff416c;
+  --secondary-color: #ff4b2b;
+  --accent-color: #1abc9c;
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-color: #ececec;
+  --max-width: 1200px;
+  --transition-fast: 0.2s ease-out;
+  --transition-medium: 0.3s ease-out;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Inter", sans-serif;
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/*–––––––––––––––––––––––––––––––––––––
+  Header & Nav
+–––––––––––––––––––––––––––––––––––––*/
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(
+    120deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.navbar__brand {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.navbar__menu {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar__link {
+  color: white;
+  text-decoration: none;
+  position: relative;
+  padding: 0.5rem 0;
+  font-weight: 500;
+}
+
+.navbar__link::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent-color);
+  transition: width var(--transition-medium), left var(--transition-medium);
+}
+
+.navbar__link:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/*–––––––––––––––––––––––––––––––––––––
+  Hero Section
+–––––––––––––––––––––––––––––––––––––*/
+.hero {
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+      120deg,
+      rgba(255, 65, 108, 0.85),
+      rgba(255, 75, 43, 0.85)
+    ),
+    url("/static/main/hero-bg.jpg") center/cover no-repeat;
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+}
+
+.hero__inner {
+  max-width: 800px;
+  padding: 0 1rem;
+}
+
+.hero__title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  animation: slideDown 0.8s ease-out;
+}
+
+.hero__tagline {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  animation: slideDown 1s ease-out;
+}
+
+.hero__cta {
+  display: inline-block;
+  background: var(--accent-color);
+  color: #121212;
+  font-size: 1.1rem;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.hero__cta:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/*–––––––––––––––––––––––––––––––––––––
+  Sections & Typography
+–––––––––––––––––––––––––––––––––––––*/
+.section-title {
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--accent-color);
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+.about,
+.features,
+.download-page {
+  padding: 4rem 0;
+  animation: fadeIn 1s ease-out;
+}
+
+.about__text,
+.download-page__text {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1rem;
+  line-height: 1.8;
+  text-align: center;
+  color: #ccc;
+}
+
+/*–––––––––––––––––––––––––––––––––––––
+  Features Grid
+–––––––––––––––––––––––––––––––––––––*/
+.features__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.features__item {
+  background: var(--surface-color);
+  padding: 2rem;
+  border-radius: 12px;
+  transition: transform var(--transition-medium),
+    background var(--transition-medium);
+}
+
+.features__item:hover {
+  transform: translateY(-6px);
+  background: #2a2a2a;
+}
+
+/*–––––––––––––––––––––––––––––––––––––
+  Download Button
+–––––––––––––––––––––––––––––––––––––*/
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background var(--transition-medium),
+    transform var(--transition-fast);
+}
+
+.download-btn-wrapper {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn--download {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.btn--download:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+/*–––––––––––––––––––––––––––––––––––––
+  Footer
+–––––––––––––––––––––––––––––––––––––*/
+.site-footer {
+  background: #111;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.footer__text {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+/*–––––––––––––––––––––––––––––––––––––
+  Animations
+–––––––––––––––––––––––––––––––––––––*/
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

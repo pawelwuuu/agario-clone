@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}AgarClone{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/style.css' %}" />
+  </head>
+  <body class="site-body">
+    <header class="site-header">
+      <nav class="navbar">
+        <div class="container navbar__inner">
+          <a href="{% url 'index' %}" class="navbar__brand">AgarClone</a>
+          <ul class="navbar__menu">
+            <li class="navbar__item">
+              <a href="{% url 'index' %}" class="navbar__link">Home</a>
+            </li>
+            <li class="navbar__item">
+              <a href="{% url 'download' %}" class="navbar__link">Download</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main class="site-main">{% block content %}{% endblock %}</main>
+
+    <footer class="site-footer">
+      <div class="container footer__inner">
+        <p class="footer__text">&copy; 2025 AgarClone. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

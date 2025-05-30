@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block title %}Download – AgarClone{% endblock%} 
+ 
+{% block content %}
+<section class="download-page">
+  <div class="container download-page__inner">
+    <h1 class="section-title">Download AgarClone</h1>
+    <p class="download-page__text">
+      Grab the latest build of the game and start playing instantly. Includes
+      server and client code.
+    </p>
+
+    <div class="download-btn-wrapper">
+      <a
+        href="{% static 'main/agario_clone.zip' %}"
+        download
+        class="btn btn--download"
+      >
+        Download ZIP
+      </a>
+    </div>
+    
+  </div>
+</section>
+{% endblock %}
