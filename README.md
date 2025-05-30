@@ -159,6 +159,7 @@ AgarClone includes a Django-based web application to download the game and learn
 
    ```bash
    cd web
+   cd agario_site
    ```
 
 2. **Install dependencies**
