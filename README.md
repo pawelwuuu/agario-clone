@@ -149,6 +149,66 @@ pip install -r requirements.txt
 - 🌐 Multiple maps & game modes
 - 🏆 Global leaderboards & stats
 
+---
+
+## 🌐 Running the Website
+
+AgarClone includes a Django-based web application to download the game and learn more about it. Follow these steps to run the site in development mode:
+
+1. **Navigate to the Django project directory**
+
+   ```bash
+   cd web    # or "cd agario_site" if your Django app is in the "agario_site" folder
+   ```
+
+2. **Create and activate a virtual environment**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate        # Linux/macOS
+   venv\Scripts\activate           # Windows PowerShell
+   ```
+
+3. **Install dependencies**
+   Ensure `requirements.txt` (in the “web” directory) contains `Django>=3.2`, then run:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **(Optional) Collect static files**
+   If `DEBUG = False` in `settings.py`, run:
+
+   ```bash
+   python manage.py collectstatic
+   ```
+
+   In development mode (`DEBUG = True`), Django will serve static files from `main/static` automatically.
+
+5. **Run database migrations**
+   Even if you have no custom models, it’s good practice to run:
+
+   ```bash
+   python manage.py migrate
+   ```
+
+6. **Start the development server**
+
+   ```bash
+   python manage.py runserver
+   ```
+
+7. **Open the site in your browser**
+   Visit:
+
+   ```
+   http://127.0.0.1:8000/
+   ```
+
+   You’ll see the page with a game description and a “Download” button linking to the Pygame client ZIP.
+
+---
+
 ## 🎨 License
 
 This project is open-sourced under the **MIT License**. See [LICENSE](LICENSE) for details.
