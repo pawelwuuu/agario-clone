@@ -158,25 +158,17 @@ AgarClone includes a Django-based web application to download the game and learn
 1. **Navigate to the Django project directory**
 
    ```bash
-   cd web    # or "cd agario_site" if your Django app is in the "agario_site" folder
+   cd web
    ```
 
-2. **Create and activate a virtual environment**
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate        # Linux/macOS
-   venv\Scripts\activate           # Windows PowerShell
-   ```
-
-3. **Install dependencies**
+2. **Install dependencies**
    Ensure `requirements.txt` (in the “web” directory) contains `Django>=3.2`, then run:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **(Optional) Collect static files**
+3. **(Optional) Collect static files**
    If `DEBUG = False` in `settings.py`, run:
 
    ```bash
@@ -185,20 +177,20 @@ AgarClone includes a Django-based web application to download the game and learn
 
    In development mode (`DEBUG = True`), Django will serve static files from `main/static` automatically.
 
-5. **Run database migrations**
+4. **Run database migrations**
    Even if you have no custom models, it’s good practice to run:
 
    ```bash
    python manage.py migrate
    ```
 
-6. **Start the development server**
+5. **Start the development server**
 
    ```bash
    python manage.py runserver
    ```
 
-7. **Open the site in your browser**
+6. **Open the site in your browser**
    Visit:
 
    ```
