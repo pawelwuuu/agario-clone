@@ -1,123 +1,158 @@
-# Klon Agar.io w Pythonie
+<p align="center">
+  <img src="assets/images/logo.png" alt="Agar.io Clone Logo" width="150" />
+</p>
 
-## Tech Stack
+<p align="center">
+  <a href="#readme"><img src="https://img.shields.io/badge/README-Fancy-blue.svg?style=for-the-badge" alt="Fancy Badge" /></a>
+  <img src="https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge" alt="Python Version" />
+  <img src="https://img.shields.io/badge/asyncio-ready-brightgreen.svg?style=for-the-badge" alt="asyncio" />
+  <img src="https://img.shields.io/badge/pygame–2.0%2B-lightgrey.svg?style=for-the-badge" alt="Pygame" />
+  <img src="https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge" alt="License" />
+</p>
 
-Projekt w całości napisany w Pythonie, wykorzystujący:
+## 🚀 Overview
 
-- **Python 3.8+**: podstawowy język i środowisko wykonawcze.
-- **asyncio**: asynchroniczna pętla zdarzeń i korutyny, zapewniające wydajną obsługę wielu graczy.
-- **websockets**: komunikacja w czasie rzeczywistym przez protokół WebSocket.
-- **pygame**: renderowanie grafiki, obsługa wejścia użytkownika i pętla gry.
+> A **supercharged**, **high-octane** clone of Agar.io written in **pure Python**, featuring real-time networking, slick graphics, and endless fun!
 
-## Struktura projektu
-
-```
-agario_clone/
-├── README.md            # Ten plik
-├── requirements.txt     # Lista zależności (websockets, pygame)
-├── config.py            # Konfiguracja gry (port, rozmiar okna, FPS)
-├── common/              # Wspólne moduły klient–serwer
-│   ├── messages.py      # Format i typy komunikatów JSON (JOIN, MOVE, UPDATE)
-│   └── utils.py         # Funkcje pomocnicze (np. kolizje, konwersje współrzędnych)
-│
-├── server/              # Kod serwera WebSocket
-│   ├── server.py        # Uruchomienie serwera i obsługa połączeń
-│   ├── game_state.py    # Klasa GameState: zarządza stanem gry (pozycje, kolizje)
-│   └── handlers.py      # Handlery websocket (JOIN, MOVE, broadcast UPDATE)
-│
-├── client/              # Kod klienta Pygame — separacja logiki
-│   ├── client.py        # Punkt wejścia: pętla Pygame i obsługa inputu
-│   ├── network.py       # Moduł network: wsparcie WebSocket (JOIN, MOVE, UPDATE)
-│   └── renderer.py      # Moduł renderer: funkcja rysująca stan gry w Pygame
-│
-└── assets/              # Zasoby (czcionki, obrazy)
-    ├── fonts/
-    │   └── arcade.ttf
-    └── images/
-        └── logo.png
-```
-
-### Podział modułów klienta
-
-- **client.py**: uruchamia wątek sieciowy (`network.start_network_thread()`), obsługuje pętlę Pygame, przetwarza input (WSAD) i aktualizuje `local_pos`.
-- **network.py**: odpowiada za komunikację z serwerem:
-
-  1. Łączy się przez WebSocket (`JOIN`).
-  2. Wysyła cyklicznie (`1/FPS`) aktualną pozycję (`MOVE`).
-  3. Odbiera stany gry (`UPDATE`) i zapisuje je w `shared_state`.
-
-- **renderer.py**: funkcja `render(screen, shared_state)`, która rysuje wszystkie kulki na podstawie danych z `shared_state`.
-
-_(Dzięki takiej architekturze łatwo testować i rozbudowywać każdy element niezależnie.)_
+<p align="center">
+  <img src="assets/images/demo.gif" alt="Game Demo" width="600" />
+</p>
 
 ---
 
-## Wymagania
+## 🐍 Tech Stack
 
-- Python 3.8 lub nowszy
-- Pakiety z `requirements.txt`:
+| Component      | Technology  | Description                            |
+| -------------- | ----------- | -------------------------------------- |
+| 📝 Language    | Python 3.8+ | Core codebase                          |
+| 🔄 Concurrency | asyncio     | Efficient event loop                   |
+| 🌐 Networking  | websockets  | Real-time bi-directional communication |
+| 🎨 Graphics    | pygame      | 2D rendering & input handling          |
 
-  ```text
-  websockets>=10.0
-  pygame>=2.0
-  ```
+---
 
-## Instalacja
+## 🗂️ Project Structure 💎
 
-1. Sklonuj repozytorium:
+📂 **agario_clone/**
 
-   ```bash
-   git clone https://github.com/użytkownik/agario_clone.git
-   cd agario_clone
-   ```
-
-2. Zainstaluj zależności:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-## Konfiguracja
-
-W `config.py` dostosuj:
-
-```python
-PORT = 8765        # Port serwera
-WIDTH = 800        # Szerokość okna gry
-HEIGHT = 600       # Wysokość okna gry
-FPS = 60           # Klient FPS
+```
+agario_clone/
+├── 📄 README.md            # Ten plik
+├── 📄 requirements.txt     # Lista zależności (websockets, pygame)
+├── 📄 config.py            # Konfiguracja gry (port, rozmiar okna, FPS)
+├── 📁 common/              # Wspólne moduły klient–serwer
+│   ├── 📄 messages.py      # Format komunikatów JSON (JOIN, MOVE, UPDATE)
+│   └── 📄 utils.py         # Funkcje pomocnicze (kolizje, konwersje)
+│
+├── 📁 server/              # Kod serwera WebSocket
+│   ├── 📄 server.py        # Uruchomienie serwera i obsługa połączeń
+│   ├── 📄 game_state.py    # Klasa GameState: stan gry i logika
+│   └── 📄 handlers.py      # Handlery: JOIN, MOVE, broadcast UPDATE
+│
+├── 📁 client/              # Kod klienta Pygame — separacja logiki
+│   ├── 📄 client.py        # Punkt wejścia i pętla gry
+│   ├── 📄 network.py       # Komunikacja WS (JOIN, MOVE, UPDATE)
+│   └── 📄 renderer.py      # Renderowanie stanu gry w Pygame
+│
+└── 📁 assets/              # Zasoby (czcionki, obrazy)
+    ├── 📁 fonts/
+    │   └── 📄 arcade.ttf
+    └── 📁 images/
+        └── 📄 logo.png
 ```
 
-## Uruchomienie
+🔗 **Flow Diagram (Mermaid)**
 
-### Serwer
+```mermaid
+flowchart LR
+  subgraph agario_clone
+    direction TB
+    README["📄 README.md"]
+    REQS["📄 requirements.txt"]
+    CFG["📄 config.py"]
+    subgraph Common_Modules [📁 common]
+      MSG["📄 messages.py"]
+      UTIL["📄 utils.py"]
+    end
+
+    subgraph Server [📁 server]
+      SVR["📄 server.py"]
+      GS["📄 game_state.py"]
+      HND["📄 handlers.py"]
+    end
+
+    subgraph Client [📁 client]
+      CLT["📄 client.py"]
+      NET["📄 network.py"]
+      REN["📄 renderer.py"]
+    end
+
+    ASSET["📁 assets/"]:::asset
+    FONT["📄 arcade.ttf"]
+    IMG["📄 logo.png"]
+  end
+
+  README --> MSG
+  CFG --> MSG
+  REQS --> MSG
+  MSG --> SVR
+  SVR --> GS
+  SVR --> HND
+  CLT --> NET
+  CLT --> REN
+  ASSET --> FONT
+  ASSET --> IMG
+
+  classDef asset fill:#f9f,stroke:#333,stroke-width:1px;
+```
+
+---
+
+## 🚀 Getting Started
 
 ```bash
-python -m server.server
+# 1. Clone the repo
+git clone https://github.com/uzytkownik/agario_clone.git
+cd agario_clone
+
+# 2. Install dependencies
+pip install -r requirements.txt
 ```
 
-### Klient
+---
 
-```bash
-python -m client.client
-```
+## 🎮 Running the Game
 
-## Protokół wiadomości
+1. **Start the server**:
 
-Komunikaty JSON definiowane w `common/messages.py`:
+   ```bash
+   python -m server.server
+   ```
 
-- `join` – dołączenie gracza
-- `move` – przesłanie pozycji i rozmiaru
-- `update` – serwer przesyła stan wszystkich graczy
+2. **Launch one or more clients**:
 
-## Jak grać
+   ```bash
+   python -m client.client
+   ```
 
-1. Uruchom serwer.
-2. Otwórz jeden lub więcej klientów.
-3. Poruszaj się klawiszami **W**, **S**, **A**, **D**.
-4. Zobacz, jak Twoja kulka jest kontrolowana przez serwer.
+3. **Control your cell** using **W**, **A**, **S**, **D** keys.
+4. **Watch it move** courtesy of the server! 🕹️
 
-## Rozszerzenia
+---
 
-- Automatyczna logika zjadania (kolizje) w `GameState`.
-- Power-upy, ranking i dodatkowe tryby gry.
+## 🛠️ Features & Roadmap
+
+- ✅ Real-time multiplayer movement
+- ✅ Modular architecture: **server**, **client**, **common**
+- 🚧 Collision & eating logic (coming soon)
+- 🎯 Power-ups & special abilities
+- 🌐 Multiple maps & game modes
+- 🏆 Global leaderboards & stats
+
+## 🎨 License
+
+This project is open-sourced under the **MIT License**. See [LICENSE](LICENSE) for details.
+
+<p align="center">
+  <img src="https://media.giphy.com/media/3o7aCTPPm4OHfRLSH6/giphy.gif" alt="Celebration" width="200" />
+</p>
