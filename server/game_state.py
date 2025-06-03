@@ -73,12 +73,12 @@ class GameState:
         if player_id not in self.players:
             return []
         
-        self.players[player_id].update(x=x, y=y, r=r)
+        # Aktualizuj tylko pozycję, rozmiar jest zarządzany przez kolizje
+        self.players[player_id]["x"] = x
+        self.players[player_id]["y"] = y
         
-        # Najpierw sprawdź kolizje z jedzeniem
+        # Sprawdź kolizje
         eaten_food = self._check_food_collisions(player_id)
-        
-        # Następnie sprawdź kolizje między graczami
         self._check_player_collisions()
         
         return eaten_food

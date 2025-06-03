@@ -69,20 +69,14 @@ async def broadcast_player_eaten(eater_id: str, eaten_id: str):
         await asyncio.gather(*tasks, return_exceptions=True)
 
 async def handler(ws: WebSocketServerProtocol, path=None):
-    # 1) Dołącz nowego gracza
     player_id = game.add_player()
     clients[player_id] = ws
 
-    # 2) Potwierdź JOIN i zaloguj
     try:
         await ws.send(encode(MsgType.JOIN, {"id": player_id}))
-        logging.info(f"Player {player_id} joined")
-        
-        # 3) Wyślij początkowy stan gry
         await broadcast_state()
         
     except Exception as e:
-        logging.error(f"Error sending join confirmation to {player_id}: {e}")
         game.remove_player(player_id)
         clients.pop(player_id, None)
         return
@@ -92,25 +86,12 @@ async def handler(ws: WebSocketServerProtocol, path=None):
             msg = decode(raw)
             if msg["type"] == MsgType.MOVE.name.lower():
                 data = msg["data"]
-                
-                # 4) Aktualizuj stan gracza
                 eaten_food = game.update_player(player_id, data["x"], data["y"], data["r"])
-                
-                # 5) Jeśli gracz zjadł jedzenie, poinformuj wszystkich
                 if eaten_food:
-                    logging.info(f"Player {player_id} ate {len(eaten_food)} food pellets")
                     await broadcast_food_eaten(player_id, eaten_food)
-                
-                # 6) Broadcast zaktualizowanego stanu gry
                 await broadcast_state()
                 
-    except Exception as e:
-        logging.error(f"Error in handler for {player_id}: {e}")
     finally:
-        # 7) Usuń gracza z gry i z listy połączeń
         game.remove_player(player_id)
         clients.pop(player_id, None)
-        logging.info(f"Player {player_id} left")
-        
-        # 8) Poinformuj pozostałych graczy o zmianie stanu
         await broadcast_state()
