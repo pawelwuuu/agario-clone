@@ -5,6 +5,8 @@ class MsgType(Enum):
     JOIN   = auto()   # gracz dołącza
     MOVE   = auto()   # przesłanie nowej pozycji i rozmiaru
     UPDATE = auto()   # serwer przesyła stan wszystkich graczy
+    FOOD_EATEN = auto()  # gracz zjadł jedzenie
+    PLAYER_EATEN = auto()  # Nowy typ
 
 def encode(msg_type: MsgType, payload: dict) -> str:
     return json.dumps({
