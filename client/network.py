@@ -56,8 +56,8 @@ async def network_loop():
                     shared_state["food"] = {
                         f["id"]: f for f in data["food"]
                     }
+                    shared_state["portals"] = {portal["id"]: portal for portal in data.get("portals", [])}
                 elif msg["type"] == MsgType.FOOD_EATEN.name.lower():
-                    # Opcjonalnie: możesz dodać efekty dźwiękowe lub wizualne
                     data = msg["data"]
                     print(f"[Network] Player {data['player_id']} ate food, new size: {data['new_player_size']:.1f}")
 

@@ -57,3 +57,11 @@ def render(screen, shared_state):
         text_surface = font.render(text, True, (255, 255, 255))
         screen.blit(text_surface, (x_start, y_start))
         y_start += line_height
+    
+    for portal_id, portal in shared_state.get("portals", {}).items():
+        pygame.draw.rect(screen, (0, 0, 255), pygame.Rect(
+            int(portal["x"] - portal["r"]),
+            int(portal["y"] - portal["r"]),
+            int(portal["r"] * 2),
+            int(portal["r"] * 2),
+        ), 3)
