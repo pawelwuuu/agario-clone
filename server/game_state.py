@@ -5,6 +5,9 @@ import math
 import config
 from common.messages import MsgType, encode
 
+NICK_PREFIXES = ["Speedy", "Crazy", "Happy", "Lazy", "Smart", "Sly", "Brave", "Wild"]
+NICK_ANIMALS = ["Tiger", "Eagle", "Shark", "Panda", "Wolf", "Fox", "Lion", "Bear"]
+
 class GameState:
     def __init__(self):
         self.players: Dict[str, dict] = {}
@@ -25,10 +28,15 @@ class GameState:
             "r": random.uniform(2, 5)
         }
 
+    def _generate_random_nick(self):
+        return random.choice(NICK_PREFIXES) + random.choice(NICK_ANIMALS) + str(random.randint(1, 999))
+
     def add_player(self) -> str:
         player_id = str(uuid.uuid4())
+        nick = self._generate_random_nick()
         self.players[player_id] = {
             "id": player_id,
+            "nick": nick,
             "x": config.WIDTH / 2,
             "y": config.HEIGHT / 2,
             "r": 15
@@ -39,21 +47,19 @@ class GameState:
         self.players.pop(player_id, None)
 
     def _check_player_collisions(self):
-        """Sprawdza kolizje między graczami i wykonuje zjadanie"""
         players = list(self.players.values())
         for i, player1 in enumerate(players):
             for player2 in players[i+1:]:
                 distance = math.sqrt((player1["x"] - player2["x"])**2 + 
-                              (player1["y"] - player2["y"])**2)
-                
-                # Sprawdź czy gracze się stykają
-                if distance < player1["r"] + player2["r"]:
+                                     (player1["y"] - player2["y"])**2)
+    
+                # Sprawdź czy nachodzą się w co najmniej 50%
+                min_r = min(player1["r"], player2["r"])
+                if distance < min_r * 0.5:
                     # Sprawdź warunek zjadania (10% różnicy)
                     if player1["r"] > player2["r"] * 1.1:
-                        # Gracz1 zjada gracza2
                         self._eat_player(player1["id"], player2["id"])
                     elif player2["r"] > player1["r"] * 1.1:
-                        # Gracz2 zjada gracza1
                         self._eat_player(player2["id"], player1["id"])
 
     def _eat_player(self, eater_id: str, eaten_id: str):

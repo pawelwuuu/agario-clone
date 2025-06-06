@@ -73,7 +73,10 @@ async def handler(ws: WebSocketServerProtocol, path=None):
     clients[player_id] = ws
 
     try:
-        await ws.send(encode(MsgType.JOIN, {"id": player_id}))
+        await ws.send(encode(MsgType.JOIN, {
+            "id": player_id,
+            "nick": game.players[player_id]["nick"]
+        }))
         await broadcast_state()
         
     except Exception as e:
