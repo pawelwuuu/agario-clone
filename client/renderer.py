@@ -35,3 +35,25 @@ def render(screen, shared_state):
     if pid and player_size > 0:
         size_text = font.render(f"Rozmiar: {player_size:.1f}", True, (255, 255, 255))
         screen.blit(size_text, (10, config.HEIGHT - 40))
+
+    font = pygame.font.Font(None, 24)
+
+    # Rysujemy leaderboard w prawym górnym rogu
+    players = shared_state.get("players", {})
+    # Sortuj graczy po rozmiarze malejąco
+    sorted_players = sorted(players.values(), key=lambda p: p["r"], reverse=True)
+    top_players = sorted_players[:5]  # 5 najlepszych
+
+    x_start = config.WIDTH - 200  # 200px od prawej krawędzi
+    y_start = 10  # 10px od góry
+    line_height = 26
+
+    header = font.render("Leaderboard", True, (255, 255, 0))
+    screen.blit(header, (x_start, y_start))
+    y_start += line_height
+
+    for i, p in enumerate(top_players, start=1):
+        text = f"{i}. {p.get('nick', 'Unknown')}: {p['r']:.1f}"
+        text_surface = font.render(text, True, (255, 255, 255))
+        screen.blit(text_surface, (x_start, y_start))
+        y_start += line_height
