@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="assets/images/logo.png" alt="Agar.io Clone Logo" width="150" />
+  <img src="agario/assets/images/logo.png" alt="Agar.io Clone Logo" width="150" />
 </p>
-C:\Users\igorr\AppData\Local\Programs\Python\Python313\python -m server.server  
+
 <p align="center">
   <a href="#readme"><img src="https://img.shields.io/badge/README-Fancy-blue.svg?style=for-the-badge" alt="Fancy Badge" /></a>
   <img src="https://img.shields.io/badge/Python-3.8%2B-blue.svg?style=for-the-badge" alt="Python Version" />
