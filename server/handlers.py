@@ -73,7 +73,18 @@ async def respawn_portal_after_delay(portal_id: str, delay: int = 15):
     await broadcast_state()
 
 async def handler(ws: WebSocketServerProtocol, path=None):
-    player_id = game.add_player()
+    try:
+        raw = await asyncio.wait_for(ws.recv(), timeout=5)  # klient najpierw wysyła nick
+        msg = decode(raw)
+        if msg["type"] != "join" or "nick" not in msg["data"]:
+            await ws.close()
+            return
+        nick = msg["data"]["nick"]
+    except Exception:
+        await ws.close()
+        return
+    
+    player_id = game.add_player(nick=nick)
     clients[player_id] = ws
 
     try:

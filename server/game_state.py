@@ -34,9 +34,10 @@ class GameState:
     def _generate_random_nick(self) -> str:
         return random.choice(NICK_PREFIXES) + random.choice(NICK_ANIMALS) + str(random.randint(1, 999))
 
-    def add_player(self) -> str:
+    def add_player(self, nick: str = None) -> str:
         player_id = str(uuid.uuid4())
-        nick = self._generate_random_nick()
+        if not nick:
+            nick = self._generate_random_nick()
         self.players[player_id] = {
             "id": player_id,
             "nick": nick,
