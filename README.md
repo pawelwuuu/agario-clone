@@ -28,6 +28,7 @@ C:\Users\igorr\AppData\Local\Programs\Python\Python313\python -m server.server
 | 🔄 Concurrency | asyncio     | Efficient event loop                   |
 | 🌐 Networking  | websockets  | Real-time bi-directional communication |
 | 🎨 Graphics    | pygame      | 2D rendering & input handling          |
+| 🎨 Website     | django      | Website framework                      |
 
 ---
 
@@ -36,75 +37,22 @@ C:\Users\igorr\AppData\Local\Programs\Python\Python313\python -m server.server
 📂 **agario_clone/**
 
 ```
-agario_clone/
-├── 📄 README.md            # Ten plik
-├── 📄 requirements.txt     # Lista zależności (websockets, pygame)
-├── 📄 config.py            # Konfiguracja gry (port, rozmiar okna, FPS)
-├── 📁 common/              # Wspólne moduły klient–serwer
-│   ├── 📄 messages.py      # Format komunikatów JSON (JOIN, MOVE, UPDATE)
-│   └── 📄 utils.py         # Funkcje pomocnicze (kolizje, konwersje)
+.
+├── agario/               # Core game logic
+│   ├── assets/           # Game assets (images, sounds, fonts)
+│   ├── client/           # Client-side code (pygame implementation)
+│   ├── server/           # Game server (WebSocket, asyncio)
+│   ├── common/           # Shared modules between client and server
+│   └── dist/             # Generated client .exe file (output)
 │
-├── 📁 server/              # Kod serwera WebSocket
-│   ├── 📄 server.py        # Uruchomienie serwera i obsługa połączeń
-│   ├── 📄 game_state.py    # Klasa GameState: stan gry i logika
-│   └── 📄 handlers.py      # Handlery: JOIN, MOVE, broadcast UPDATE
+├── web/                  # Web interface (Django)
+│   └── agario_site/      # Django project configuration and app
 │
-├── 📁 client/              # Kod klienta Pygame — separacja logiki
-│   ├── 📄 client.py        # Punkt wejścia i pętla gry
-│   ├── 📄 network.py       # Komunikacja WS (JOIN, MOVE, UPDATE)
-│   └── 📄 renderer.py      # Renderowanie stanu gry w Pygame
-│
-└── 📁 assets/              # Zasoby (czcionki, obrazy)
-    ├── 📁 fonts/
-    │   └── 📄 arcade.ttf
-    └── 📁 images/
-        └── 📄 logo.png
+├── run_client.py         # Client launcher shortcut
+├── run_server.py         # Server launcher shortcut
+└── requirements.txt      # Python dependencies list
 ```
 
-🔗 **Flow Diagram (Mermaid)**
-
-```mermaid
-flowchart LR
-  subgraph agario_clone
-    direction TB
-    README["📄 README.md"]
-    REQS["📄 requirements.txt"]
-    CFG["📄 config.py"]
-    subgraph Common_Modules [📁 common]
-      MSG["📄 messages.py"]
-      UTIL["📄 utils.py"]
-    end
-
-    subgraph Server [📁 server]
-      SVR["📄 server.py"]
-      GS["📄 game_state.py"]
-      HND["📄 handlers.py"]
-    end
-
-    subgraph Client [📁 client]
-      CLT["📄 client.py"]
-      NET["📄 network.py"]
-      REN["📄 renderer.py"]
-    end
-
-    ASSET["📁 assets/"]:::asset
-    FONT["📄 arcade.ttf"]
-    IMG["📄 logo.png"]
-  end
-
-  README --> MSG
-  CFG --> MSG
-  REQS --> MSG
-  MSG --> SVR
-  SVR --> GS
-  SVR --> HND
-  CLT --> NET
-  CLT --> REN
-  ASSET --> FONT
-  ASSET --> IMG
-
-  classDef asset fill:#f9f,stroke:#333,stroke-width:1px;
-```
 
 ---
 
@@ -112,7 +60,7 @@ flowchart LR
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/uzytkownik/agario_clone.git
+git clone
 cd agario_clone
 
 # 2. Install dependencies
@@ -126,13 +74,15 @@ pip install -r requirements.txt
 1. **Start the server**:
 
    ```bash
-   python -m server.server
+   cd agario
+   python run_server.py
    ```
 
 2. **Launch one or more clients**:
 
    ```bash
-   python -m client.client
+   cd agario
+   python run_client.py
    ```
 
 3. **Control your cell** using **W**, **A**, **S**, **D** keys.
@@ -144,10 +94,9 @@ pip install -r requirements.txt
 
 - ✅ Real-time multiplayer movement
 - ✅ Modular architecture: **server**, **client**, **common**
-- 🚧 Collision & eating logic (coming soon)
-- 🎯 Power-ups & special abilities
-- 🌐 Multiple maps & game modes
-- 🏆 Global leaderboards & stats
+- 🚧 Collision & eating logic
+- 🎯 Portals
+- 🏆 Leaderboards & stats
 
 ---
 
@@ -162,14 +111,7 @@ AgarClone includes a Django-based web application to download the game and learn
    cd agario_site
    ```
 
-2. **Install dependencies**
-   Ensure `requirements.txt` (in the “web” directory) contains `Django>=3.2`, then run:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **(Optional) Collect static files**
+2. **(Optional) Collect static files**
    If `DEBUG = False` in `settings.py`, run:
 
    ```bash
@@ -178,27 +120,21 @@ AgarClone includes a Django-based web application to download the game and learn
 
    In development mode (`DEBUG = True`), Django will serve static files from `main/static` automatically.
 
-4. **Run database migrations**
-   Even if you have no custom models, it’s good practice to run:
 
-   ```bash
-   python manage.py migrate
-   ```
-
-5. **Start the development server**
+3. **Start the development server**
 
    ```bash
    python manage.py runserver
    ```
 
-6. **Open the site in your browser**
+4. **Open the site in your browser**
    Visit:
 
    ```
    http://127.0.0.1:8000/
    ```
 
-   You’ll see the page with a game description and a “Download” button linking to the Pygame client ZIP.
+   You’ll see the page with a game description and a “Download” button linking to the Pygame client.
 
 ---
 
