@@ -4,30 +4,32 @@ import websockets
 import config
 from .handlers import handler, portal_manager
 
-# Create HTTP app for health checks
-http_app = web.Application()
-
 async def health_check(request):
     return web.Response(text="OK")
 
-http_app.router.add_get('/health', health_check)
-
 async def websocket_server():
-    print(f"[Server] Starting WebSocket on port {config.PORT}")
+    print(f"[Server] Starting WebSocket on port {config.WS_PORT}")
     asyncio.create_task(portal_manager())
-    return await websockets.serve(handler, "0.0.0.0", config.PORT)
+    return await websockets.serve(handler, "0.0.0.0", config.WS_PORT)
 
 async def http_server():
-    runner = web.AppRunner(http_app)
+    app = web.Application()
+    app.router.add_get('/health', health_check)
+    runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", 8080)  # Different port for HTTP
+    site = web.TCPSite(runner, "0.0.0.0", config.HTTP_PORT)
     await site.start()
-    print(f"[Server] Health check at http://0.0.0.0:8080/health")
+    print(f"[Server] HTTP server running on port {config.HTTP_PORT}")
 
 async def main():
     await http_server()
-    await websocket_server()
-    await asyncio.Future()  # Run forever
+    ws_server = await websocket_server()
+    
+    try:
+        await asyncio.Future()  # Run forever
+    finally:
+        ws_server.close()
+        await ws_server.wait_closed()
 
 if __name__ == "__main__":
     asyncio.run(main())
