@@ -89,6 +89,7 @@ class GameState:
                 self.players[player_id]["r"] += 0.1
                 del self.food[food_id]
                 self._spawn_food()
+                # Dodajemy informację o dźwięku do wiadomości FOOD_EATEN
         return eaten_food
 
     def get_state(self) -> dict:
@@ -105,7 +106,8 @@ class GameState:
         return encode(MsgType.FOOD_EATEN, {
             "player_id": player_id,
             "food_ids": eaten_food_ids,
-            "new_player_size": self.players[player_id]["r"] if player_id in self.players else 0
+            "new_player_size": self.players[player_id]["r"] if player_id in self.players else 0,
+            "sound": "/static/main/sounds/pop.mp3"
         })
 
     def encode_player_eaten(self, eater_id: str, eaten_id: str) -> str:

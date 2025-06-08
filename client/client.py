@@ -1,9 +1,10 @@
 import threading
 import pygame
 import math
+import os
 
 import config
-from client.network import start_network_thread, shared_state, local_pos, local_pos_lock
+from client.network import start_network_thread, shared_state, local_pos, local_pos_lock, sound_events, sound_lock
 from client.renderer import render
 from client.start_screen import show_start_screen
 
@@ -15,6 +16,24 @@ def calculate_speed(base_speed, radius):
 def main():
     pygame.init()
     screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
+    pygame.mixer.init()
+    
+    # Inicjalizacja dźwięku
+    try:
+        sound_path = os.path.join("web", "agario_site", "main", "static", "main", "sounds", "Pop 1.mp3")
+        pop_sound = pygame.mixer.Sound(sound_path)
+    except Exception as e:
+        print(f"Could not load sound file: {e}")
+        pop_sound = None
+    try:
+
+        music_path = os.path.join("web", "agario_site", "main", "static", "main", "sounds", "muzyka1.mp3")
+        pygame.mixer.music.load(music_path)
+        pygame.mixer.music.play(-1)  # -1 oznacza zapętlenie
+        print(f"Playing background music from: {music_path}")
+    except Exception as e:
+        print(f"Could not load or play background music: {e}")
+
     nick = show_start_screen(screen)
     net_thread = threading.Thread(target=start_network_thread, args=(nick,), daemon=True)
     net_thread.start()
@@ -27,6 +46,14 @@ def main():
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
                 running = False
+
+        # Obsługa dźwięków
+        with sound_lock:
+            if sound_events:
+                for event in sound_events:
+                    if event == "food_eaten" and pop_sound:
+                        pop_sound.play()
+                sound_events.clear()
 
         pid = shared_state.get("player_id")
         if pid and pid in shared_state["players"]:
