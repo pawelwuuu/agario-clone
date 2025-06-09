@@ -13,7 +13,6 @@ shared_state = {
 local_pos = {"x": config.WIDTH/2, "y": config.HEIGHT/2, "r": 15}
 local_pos_lock = threading.Lock()
 
-# Dodane dla obsługi dźwięków
 sound_events = []
 sound_lock = threading.Lock()
 
@@ -21,10 +20,7 @@ async def network_loop(nick):
     uri = f"ws://localhost:{config.PORT}"
     try:
         async with websockets.connect(uri) as ws:
-            # Wyślij nick zaraz po połączeniu
             await ws.send(encode(MsgType.JOIN, {"nick": nick}))
-            
-            # Odbierz potwierdzenie JOIN z id
             raw = await ws.recv()
             msg = decode(raw)
             if msg["type"] == MsgType.JOIN.name.lower():
@@ -53,10 +49,11 @@ async def network_loop(nick):
                     shared_state["portals"] = {portal["id"]: portal for portal in data.get("portals", [])}
                 elif msg["type"] == MsgType.FOOD_EATEN.name.lower():
                     data = msg["data"]
-                    # print(f"[Network] Player {data['player_id']} ate food, new size: {data['new_player_size']:.1f}")
-                    # Dodaj event dźwiękowy
                     with sound_lock:
                         sound_events.append("food_eaten")
+                elif msg["type"] == MsgType.PLAYER_EATEN.name.lower():
+                    with sound_lock:
+                       sound_events.append("player_eaten")
 
             send_task.cancel()
 
