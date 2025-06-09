@@ -4,6 +4,7 @@ import random
 import math
 import config
 from common.messages import MsgType, encode
+import asyncio
 
 NICK_PREFIXES = ["Speedy", "Crazy", "Happy", "Lazy", "Smart", "Sly", "Brave", "Wild"]
 NICK_ANIMALS = ["Tiger", "Eagle", "Shark", "Panda", "Wolf", "Fox", "Lion", "Bear"]
@@ -17,6 +18,7 @@ class GameState:
         self.max_food = 50
         self._generate_initial_portal()
         self._generate_initial_food()
+        self.on_player_eaten_callback = None
 
     def _generate_initial_food(self):
         for _ in range(self.max_food):
@@ -68,6 +70,8 @@ class GameState:
         self.players[eater_id]["r"] += eaten_size * 0.5
         self.remove_player(eaten_id)
         print(f"Player {eater_id} ate player {eaten_id} and grew to {self.players[eater_id]['r']:.1f}")
+        if self.on_player_eaten_callback:
+            asyncio.create_task(self.on_player_eaten_callback(eater_id, eaten_id))
 
     def update_player(self, player_id: str, x: float, y: float, r: float) -> List[str]:
         if player_id not in self.players:

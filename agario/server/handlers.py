@@ -10,7 +10,23 @@ logging.basicConfig(
     datefmt='%H:%M:%S'
 )
 
+async def broadcast_player_eaten(eater_id: str, eaten_id: str):
+    if not clients:
+        return
+    msg = game.encode_player_eaten(eater_id, eaten_id)
+    tasks = []
+    for pid, ws in list(clients.items()):
+        try:
+            tasks.append(ws.send(msg))
+        except Exception as e:
+            logging.warning(f"Failed to send player_eaten to {pid}: {e}")
+            clients.pop(pid, None)
+            game.remove_player(pid)
+    if tasks:
+        await asyncio.gather(*tasks, return_exceptions=True)
+
 game = GameState()
+game.on_player_eaten_callback = broadcast_player_eaten
 clients: dict[str, WebSocketServerProtocol] = {}
 
 async def portal_manager():
@@ -47,21 +63,6 @@ async def broadcast_food_eaten(player_id: str, eaten_food_ids: list):
             tasks.append(ws.send(msg))
         except Exception as e:
             logging.warning(f"Failed to send food_eaten to {pid}: {e}")
-            clients.pop(pid, None)
-            game.remove_player(pid)
-    if tasks:
-        await asyncio.gather(*tasks, return_exceptions=True)
-
-async def broadcast_player_eaten(eater_id: str, eaten_id: str):
-    if not clients:
-        return
-    msg = game.encode_player_eaten(eater_id, eaten_id)
-    tasks = []
-    for pid, ws in list(clients.items()):
-        try:
-            tasks.append(ws.send(msg))
-        except Exception as e:
-            logging.warning(f"Failed to send player_eaten to {pid}: {e}")
             clients.pop(pid, None)
             game.remove_player(pid)
     if tasks:
