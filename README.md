@@ -124,6 +124,7 @@ AgarClone includes a Django-based web application to download the game and learn
 3. **Start the development server**
 
    ```bash
+   python manage.py migrate
    python manage.py runserver
    ```
 
